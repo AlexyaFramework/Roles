@@ -20,7 +20,7 @@ use Alexya\Tools\Collection;
  * For a shorter version, you can use `can`, 'cuz shorter > longer.
  *
  * @property int          $id          Role identifier.
- * @property string       $description Role description.
+ * @property string       $title       Role title.
  * @property Permission[] $permissions Granted permissions.
  * @property Role         $parent      Parent role.
  *
@@ -32,17 +32,17 @@ class Role extends Collection
      * Constructor.
      *
      * @param int          $id          Role identifier.
-     * @param string       $description Role description.
+     * @param string       $title       Role title.
      * @param Permission[] $permissions Granted permissions.
      * @param Role         $parent      Parent role.
      */
-    public function __construct(int $id, string $description, array $permissions, Role $parent = null)
+    public function __construct(int $id, string $title, array $permissions = [], Role $parent = null)
     {
         parent::__construct([
-            "id"          => $id,
-            "description" => $description,
-            "permissions" => $permissions,
-            "parent"      => $parent
+                "id"          => $id,
+                "title"       => $title,
+                "permissions" => $permissions,
+                "parent"      => $parent
         ]);
     }
 }
