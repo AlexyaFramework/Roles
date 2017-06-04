@@ -21,6 +21,7 @@ use Alexya\Tools\Collection;
  *
  * @property int        $id          Role identifier.
  * @property string     $title       Role title.
+ * @property int        $priority    Role priority.
  * @property Collection $permissions Granted permissions.
  * @property Role       $parent      Parent role.
  *
@@ -33,14 +34,16 @@ class Role extends Collection
      *
      * @param int          $id          Role identifier.
      * @param string       $title       Role title.
+     * @param int          $priority    Role priority.
      * @param Permission[] $permissions Granted permissions.
      * @param Role         $parent      Parent role.
      */
-    public function __construct(int $id, string $title, array $permissions = [], Role $parent = null)
+    public function __construct(int $id, string $title, int $priority = 0, array $permissions = [], Role $parent = null)
     {
         parent::__construct([
                 "id"          => $id,
                 "title"       => $title,
+                "priority"    => $priority,
                 "permissions" => $permissions,
                 "parent"      => $parent
         ]);
