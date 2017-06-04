@@ -19,10 +19,10 @@ use Alexya\Tools\Collection;
  * checks that this role has been granted with the permission.
  * For a shorter version, you can use `can`, 'cuz shorter > longer.
  *
- * @property int          $id          Role identifier.
- * @property string       $title       Role title.
- * @property Permission[] $permissions Granted permissions.
- * @property Role         $parent      Parent role.
+ * @property int        $id          Role identifier.
+ * @property string     $title       Role title.
+ * @property Collection $permissions Granted permissions.
+ * @property Role       $parent      Parent role.
  *
  * @author Manulaiko <manulaiko@gmail.com>
  */
@@ -44,5 +44,71 @@ class Role extends Collection
                 "permissions" => $permissions,
                 "parent"      => $parent
         ]);
+    }
+
+    /**
+     * Checks that this role has has granted specified permission.
+     *
+     * @param mixed $permission Permission to check.
+     *
+     * @return bool Whether this role has `$permission` granted or not.
+     */
+    public function hasPermission($permission) : bool
+    {
+        /**
+         * The permission instance.
+         *
+         * @var Permission $p
+         */
+        $p = null;
+
+        if(is_numeric($permission)) {
+            $p = $this->permissions->find(function($key, $perm) use($permission) {
+                return $perm->id == $permission;
+            });
+        }
+
+        if(
+            is_string($permission) &&
+            $p == null
+        ) {
+            $p = $this->permissions->find(function($key, $perm) use($permission) {
+                return $perm->description == $permission;
+            });
+        }
+
+        if(
+            $p == null &&
+            ($p instanceof Permission)
+        ) {
+            $p = $this->permissions->find(function($key, $perm) use($permission) {
+                return ($perm instanceof $permission);
+            });
+        }
+
+        if(
+            $p != null &&
+            $p->status != Permission::STATUS_INHERITED
+        ) {
+            return ($p->status == Permission::STATUS_ENABLED);
+        }
+
+        if($this->parent != null) {
+            return $this->parent->hasPermission($permission);
+        }
+
+        return false;
+    }
+
+    /**
+     * Checks that this role has has granted specified permission.
+     *
+     * @param mixed $permission Permission to check.
+     *
+     * @return bool Whether this role has `$permission` granted or not.
+     */
+    public function can($permission) : bool
+    {
+        return $this->hasPermission($permission);
     }
 }
