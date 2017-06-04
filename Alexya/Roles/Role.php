@@ -114,4 +114,38 @@ class Role extends Collection
     {
         return $this->hasPermission($permission);
     }
+
+    /**
+     * Adds a new permission to the role.
+     *
+     * @param Permission $permission Permission to add to the role.
+     */
+    public function addPermission(Permission $permission)
+    {
+        $this->permissions->set($permission->title, $permission);
+    }
+
+    /**
+     * Removes a permission from the role.
+     *
+     * @param mixed $permission Permission to remove.
+     */
+    public function removePermission($permission)
+    {
+        $this->permissions = $this->permissions->filter(function($key, $value) use($permission) {
+            if(is_numeric($permission)) {
+                return $value->id == $permission;
+            }
+
+            if(is_string($permission)) {
+                return $value->title == $permission;
+            }
+
+            if($permission instanceof Role) {
+                return ($value instanceof $permission);
+            }
+
+            return false;
+        });
+    }
 }
