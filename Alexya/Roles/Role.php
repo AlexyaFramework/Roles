@@ -61,39 +61,15 @@ class Role extends Collection
         /**
          * The permission instance.
          *
-         * @var Permission $p
+         * @var Permission $permission
          */
-        $p = null;
-
-        if(is_numeric($permission)) {
-            $p = $this->permissions->find(function($key, $perm) use($permission) {
-                return $perm->id == $permission;
-            });
-        }
+        $permission = $this->getPermission($permission);
 
         if(
-            is_string($permission) &&
-            $p == null
+            $permission != null &&
+            $permission->status != Permission::STATUS_INHERITED
         ) {
-            $p = $this->permissions->find(function($key, $perm) use($permission) {
-                return $perm->description == $permission;
-            });
-        }
-
-        if(
-            $p == null &&
-            ($p instanceof Permission)
-        ) {
-            $p = $this->permissions->find(function($key, $perm) use($permission) {
-                return ($perm instanceof $permission);
-            });
-        }
-
-        if(
-            $p != null &&
-            $p->status != Permission::STATUS_INHERITED
-        ) {
-            return ($p->status == Permission::STATUS_ENABLED);
+            return ($permission->status == Permission::STATUS_ENABLED);
         }
 
         if($this->parent != null) {
@@ -132,20 +108,60 @@ class Role extends Collection
      */
     public function removePermission($permission)
     {
+        $permission = $this->getPermission($permission);
+
         $this->permissions = $this->permissions->filter(function($key, $value) use($permission) {
-            if(is_numeric($permission)) {
-                return $value->id == $permission;
-            }
-
-            if(is_string($permission)) {
-                return $value->title == $permission;
-            }
-
-            if($permission instanceof Role) {
-                return ($value instanceof $permission);
-            }
-
-            return false;
+            return ($value == $permission);
         });
+    }
+
+    /**
+     * Returns specified permission.
+     *
+     * @param mixed $permission Permission to retrieve.
+     *
+     * @return Permission Permission for `$permission`.
+     */
+    public function getPermission($permission) : Permission
+    {
+        /**
+         * The permission.
+         *
+         * @var Permission $p
+         */
+        $p = null;
+
+        if(is_numeric($permission)) {
+            $p = $this->permissions->find(function($key, $perm) use($permission) {
+                return $perm->id == $permission;
+            });
+        }
+
+        if(
+            is_string($permission) &&
+            $p == null
+        ) {
+            $p = $this->permissions->find(function($key, $perm) use($permission) {
+                return $perm->description == $permission;
+            });
+        }
+
+        if(
+            $p == null &&
+            ($permission instanceof Permission)
+        ) {
+            $p = $this->permissions->find(function($key, $perm) use($permission) {
+                return ($perm instanceof $permission);
+            });
+        }
+
+        if(
+            $p == null &&
+            $this->parent != null
+        ) {
+            $p = $this->parent->getPermission($permission);
+        }
+
+        return $p;
     }
 }
