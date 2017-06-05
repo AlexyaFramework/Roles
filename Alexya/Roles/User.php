@@ -9,6 +9,12 @@ use Alexya\Tools\Collection;
  *
  * This class represents an user, where the roles are assigned.
  *
+ * It's the class that you should extend in order to add roles to your users as
+ * it provides the `hasPermission` and `can` methods for checking if this user
+ * has any permission granted.
+ *
+ * It also has the methods `addRole` and `removeRole` to add/remove roles.
+ *
  * @author Manulaiko <manulaiko@gmail.com>
  */
 class User

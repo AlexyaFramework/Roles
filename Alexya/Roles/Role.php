@@ -9,7 +9,7 @@ use Alexya\Tools\Collection;
  *
  * This class represents a role by itself.
  *
- * It has an identifier for the role, a description
+ * It has an identifier for the role, a title
  * and an array of `Permission` with the granted
  * permissions for this role.
  * Alternatively, a role can have a parent role for inheritance.
