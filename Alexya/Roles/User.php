@@ -49,7 +49,7 @@ class User
                 return 0;
             }
 
-            return ($a->priority > $b->priority) ? -1 : 1;
+            return ($a->priority < $b->priority) ? -1 : 1;
         });
     }
 
@@ -76,9 +76,11 @@ class User
         $roles = $this->roles->getAll();
 
         foreach($roles as $role) {
-            if($role->can($permission)) {
-                return true;
+            if($role->getPermission($permission) == null) {
+                continue;
             }
+
+            return $role->can($permission);
         }
 
         return false;
@@ -130,5 +132,50 @@ class User
 
             return false;
         });
+    }
+
+
+
+    /**
+     * Returns specified role.
+     *
+     * @param mixed $role Role to retrieve.
+     *
+     * @return Role|null Role for `$role`.
+     */
+    public function getRole($role)
+    {
+        /**
+         * The role.
+         *
+         * @var Role $r
+         */
+        $r = null;
+
+        if(is_numeric($role)) {
+            $r = $this->roles->find(function($key, $value) use($role) {
+                return $value->id == $role;
+            });
+        }
+
+        if(
+            is_string($role) &&
+            $r == null
+        ) {
+            $r = $this->roles->find(function($key, $value) use($role) {
+                return $value->title == $role;
+            });
+        }
+
+        if(
+            $r == null &&
+            ($role instanceof Role)
+        ) {
+            $r = $this->roles->find(function($key, $value) use($role) {
+                return ($value instanceof $role);
+            });
+        }
+
+        return $r;
     }
 }
