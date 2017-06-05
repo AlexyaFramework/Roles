@@ -1,0 +1,27 @@
+{
+    "name": "alexya-framework/roles",
+    "type": "framework",
+    "version": "3.0.0",
+    "description": "Alexya's Role Based Access System utilities",
+    "keywords": ["php", "framework", "roles", "rbac", "rbas", "php7", "alexya"],
+    "license": "GNU",
+    "support": {
+        "issues": "https://github.com/AlexyaFramework/Roles/issues",
+        "source": "https://github.com/AlexyaFramework/Roles"
+    },
+    "authors": [
+        {
+            "name": "Manulaiko",
+            "email": "manulaiko@gmail.com"
+        }
+    ],
+    "require": {
+        "php": ">=7.0",
+        "alexya-framework/tools": ">=3.2"
+    },
+    "autoload": {
+        "psr-4": {
+            "Alexya\\": "Alexya"
+        }
+    }
+}
