@@ -44,7 +44,7 @@ class Role extends Collection
                 "id"          => $id,
                 "title"       => $title,
                 "priority"    => $priority,
-                "permissions" => $permissions,
+                "permissions" => new Collection($permissions),
                 "parent"      => $parent
         ]);
     }
@@ -120,9 +120,9 @@ class Role extends Collection
      *
      * @param mixed $permission Permission to retrieve.
      *
-     * @return Permission Permission for `$permission`.
+     * @return Permission|null Permission for `$permission`.
      */
-    public function getPermission($permission) : Permission
+    public function getPermission($permission)
     {
         /**
          * The permission.
@@ -142,7 +142,7 @@ class Role extends Collection
             $p == null
         ) {
             $p = $this->permissions->find(function($key, $perm) use($permission) {
-                return $perm->description == $permission;
+                return $perm->title == $permission;
             });
         }
 
