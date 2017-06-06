@@ -48,7 +48,7 @@ class User
     /**
      * Sorts the collection.
      */
-    private function _sort()
+    private function _sort() : void
     {
         $this->roles->sort(function($a, $b) {
             if($a->priority == $b->priority) {
@@ -109,7 +109,7 @@ class User
      *
      * @param Role $role Role to add to the user.
      */
-    public function addRole(Role $role)
+    public function addRole(Role $role) : void
     {
         $this->roles->set($role->title, $role);
 
@@ -121,7 +121,7 @@ class User
      *
      * @param mixed $role Role to remove.
      */
-    public function removeRole($role)
+    public function removeRole($role) : void
     {
         $this->roles = $this->roles->filter(function($key, $value) use($role) {
             if(is_numeric($role)) {
@@ -149,7 +149,7 @@ class User
      *
      * @return Role|null Role for `$role`.
      */
-    public function getRole($role)
+    public function getRole($role) : ?Role
     {
         /**
          * The role.

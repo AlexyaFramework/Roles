@@ -96,7 +96,7 @@ class Role extends Collection
      *
      * @param Permission $permission Permission to add to the role.
      */
-    public function addPermission(Permission $permission)
+    public function addPermission(Permission $permission) : void
     {
         $this->permissions->set($permission->title, $permission);
     }
@@ -106,7 +106,7 @@ class Role extends Collection
      *
      * @param mixed $permission Permission to remove.
      */
-    public function removePermission($permission)
+    public function removePermission($permission) : void
     {
         $permission = $this->getPermission($permission);
 
@@ -122,7 +122,7 @@ class Role extends Collection
      *
      * @return Permission|null Permission for `$permission`.
      */
-    public function getPermission($permission)
+    public function getPermission($permission) : ?Permission
     {
         /**
          * The permission.
